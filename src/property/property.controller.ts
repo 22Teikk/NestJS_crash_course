@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreatePropertyDto, PropertyType } from './dto/createProperty.dto';
+import { Body, Controller, Get, Headers, Param, ParseIntPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { CreatePropertyDto } from './dto/createProperty.dto';
 import { ParseIdPipe } from './pipes/parseIdPipe';
 import * as createPropertyZodDto from './dto/createPropertyZod.dto';
 import { ZodValidationPipe } from './pipes/zodValidationPipe';
+import { HeadersDto } from './dto/headers.dto';
+import { RequestHeader } from './pipes/request-header';
 
 @Controller('property')
 export class PropertyController {
@@ -20,20 +22,12 @@ export class PropertyController {
     @Patch(':id')
     update(
         @Param("id", ParseIdPipe) id,
-        @Body(
-            new ValidationPipe({
-                // Remove any properties that are not in the DTO
-                whitelist: true,
-                // Return an error if any properties are not in the DTO
-                forbidNonWhitelisted: true,
-                groups: [PropertyType.Update],
-                transform: true,
-                transformOptions: {
-                    // Allow implicit conversion of types, e.g. string to number
-                    enableImplicitConversion: true
-                }
-            })
-        ) body: CreatePropertyDto) {
+        @Body() body: CreatePropertyDto,
+        @RequestHeader(new ValidationPipe({
+            whitelist: true,
+            validateCustomDecorators: true
+        })) headers: HeadersDto,
+    ) {
         return `This action update property ${id} with data: ${body}`;
     }
 

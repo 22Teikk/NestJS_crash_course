@@ -8,6 +8,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
+    transformOptions: {
+      // Allow implicit conversion of types, e.g. string to number
+      enableImplicitConversion: true
+    }
   }));
   await app.listen(process.env.PORT ?? 3000);
 }
