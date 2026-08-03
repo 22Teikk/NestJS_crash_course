@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PropertyFeature } from "./property.feature.entity";
 import { User } from "./user.entity";
 
@@ -35,4 +35,7 @@ export class Property {
     // Change default column name of foreign key from userId to owner_id
     @JoinColumn({ name: "owner_id" })
     user: User;
+
+    @ManyToMany(() => User, (user) => user.likedProperties)
+    likedBy: User[];
 }

@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Property } from "./property.entity";
 import { property } from "zod";
 
@@ -28,4 +28,10 @@ export class User {
     @OneToMany(() => Property, (property) => property.user)
     properties: Property[]
 
+    // Many to Many relationship with Property Entity
+    // That mean one user can like many properties
+    // and one property can be liked by many users
+    @ManyToMany(() => Property, (property) => property.likedBy)
+    @JoinTable({ name: "user_property_likeds" })
+    likedProperties: Property[]
 }
