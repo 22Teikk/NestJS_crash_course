@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Headers, Param, ParseIntPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import { ParseIdPipe } from './pipes/parseIdPipe';
@@ -8,6 +8,7 @@ import { HeadersDto } from './dto/headers.dto';
 import { RequestHeader } from './pipes/request-header';
 import { PropertyService } from './property.service';
 import * as updatePropertyDto from './dto/updateProperty.dto';
+import { PaginationDto } from './dto/pagination.dto';
 
 @ApiTags('properties')
 @Controller('property')
@@ -17,8 +18,8 @@ export class PropertyController {
     @Get()
     @ApiOperation({ summary: 'Get all properties' })
     @ApiResponse({ status: 200, description: 'Return all properties.' })
-    findAll() {
-        return this.propertyService.findAll();
+    findAll(@Query() paginationDto: PaginationDto) {
+        return this.propertyService.findAll(paginationDto);
     }
 
     @Post()

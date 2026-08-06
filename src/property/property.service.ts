@@ -5,14 +5,18 @@ import { Repository } from "typeorm";
 import { Property } from "src/entities/property.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UpdatePropertyDto } from "./dto/updateProperty.dto";
+import { PaginationDto } from "./dto/pagination.dto";
 
 @Injectable()
 export class PropertyService {
     constructor(
         @InjectRepository(Property) private readonly propertyRepsitory: Repository<Property>) { }
 
-    findAll() {
-        return this.propertyRepsitory.find();
+    findAll(paginationDto: PaginationDto) {
+        return this.propertyRepsitory.find({
+            skip: paginationDto.skip,
+            take: paginationDto.limit
+        });
     }
 
     create(body: CreatePropertyDto) {
