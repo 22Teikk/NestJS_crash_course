@@ -1,6 +1,6 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Property } from "./property.entity";
-import { property } from "zod";
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User {
@@ -21,7 +21,10 @@ export class User {
 
     // this column will be set automatically when the entity is created, if want to set in update (UpdateDateColumn) 
     @CreateDateColumn()
-    createAt: Date
+    createAt: Date;
+
+    @Column({ default: '123456' })
+    password: string;
 
     // One to Many relationship with Property Entity
     // That mean one user can have many properties
@@ -34,4 +37,9 @@ export class User {
     @ManyToMany(() => Property, (property) => property.likedBy)
     @JoinTable({ name: "user_property_likeds" })
     likedProperties: Property[]
+
+    @BeforeInsert()
+    hashPassword() {
+        this.password = bcrypt.hashSync(this.password, 10)
+    }
 }

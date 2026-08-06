@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Headers, Param, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import { ParseIdPipe } from './pipes/parseIdPipe';
 import * as createPropertyZodDto from './dto/createPropertyZod.dto';
@@ -18,6 +18,18 @@ export class PropertyController {
     @Get()
     @ApiOperation({ summary: 'Get all properties' })
     @ApiResponse({ status: 200, description: 'Return all properties.' })
+    @ApiQuery({
+        name: "skip",
+        description: "Number of properties to skip",
+        example: null,
+        required: false,
+    })
+    @ApiQuery({
+        name: "limit",
+        description: "Number of items per page",
+        example: 10,
+        required: false,
+    })
     findAll(@Query() paginationDto: PaginationDto) {
         return this.propertyService.findAll(paginationDto);
     }
