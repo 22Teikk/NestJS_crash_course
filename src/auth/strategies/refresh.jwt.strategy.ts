@@ -1,17 +1,17 @@
 import * as config from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import jwtConfig from "../config/jwt.config";
 import { AuthJwtPayload } from "../types/auth.jwt.payload";
 import { Inject, Injectable } from "@nestjs/common";
+import refreshJwtConfig from "../config/refresh.jwt.config";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(@Inject(jwtConfig.KEY) private readonly jwtConfiguration: config.ConfigType<typeof jwtConfig>) {
+export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'refresh_jwt') {
+    constructor(@Inject(refreshJwtConfig.KEY) private readonly refreshJwtConfiguration: config.ConfigType<typeof refreshJwtConfig>) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: jwtConfiguration.secret,
+            secretOrKey: refreshJwtConfiguration.secret,
         });
     }
 
